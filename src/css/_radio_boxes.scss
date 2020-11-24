@@ -1,0 +1,20 @@
+.app .radio-box {
+    display: flex;
+    margin: 15px auto;
+
+    input {
+        padding-right: 15px;
+    }
+
+    .wrapper {
+        padding-left: 10px;
+    }
+
+    .title {
+        font-weight: bold;
+    }
+
+    .description {
+        color: #333;
+    }
+}

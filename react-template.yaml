@@ -1,0 +1,7 @@
+title: Split secret
+description: A simple way to split a secret into parts, to make it easier to keep.
+menu:
+  - title: Source code
+    url: "https://github.com/six-two/react_secrets"
+  - title: My other projects
+    url: "https://projects.six-two.dev/"

@@ -1,0 +1,45 @@
+$screen-medium: 600px;
+
+@import "button";
+@import "radio_boxes";
+
+.app {
+    box-sizing: border-box;
+
+    *,
+    *:before,
+    *:after {
+        box-sizing: inherit;
+    }
+
+    h1,
+    h2,
+    h3 {
+        text-align: center;
+    }
+
+    .err-msg {
+        color           : red;
+        background-color: rgb(255, 169, 169);
+        border          : 1px solid red;
+        border-radius   : 10px;
+        padding         : 3px;
+        text-align      : center;
+        margin          : 5px 15px;
+    }
+
+    @media (min-width: $screen-medium) {
+        width : 600px;
+        margin: auto;
+    }
+}
+
+textarea {
+    display: block;
+    margin : auto;
+    width  : 100%;
+}
+
+.long-string {
+    word-break: break-all;
+}
