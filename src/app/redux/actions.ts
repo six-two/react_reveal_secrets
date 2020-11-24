@@ -1,6 +1,7 @@
 // Needs to be here to prevent cyclic references
 import store from './store';
 import * as C from './constants';
+import { Share } from '../ParseShare';
 
 function d(action: Action) {
   store.dispatch(action);
@@ -8,42 +9,22 @@ function d(action: Action) {
 
 export interface Action {
   type: string,
-  payload?: string | number | boolean | null,
+  payload?: string | null | Share,
 };
 
 // action creators
-export function setScreen(newValue: string) {
-  d({ type: C.SET_SCREEN, payload: newValue });
+export function addShare(share: Share) {
+  d({ type: C.ADD_SHARE, payload: share });
 }
 
-export function setTotalShareCount(newValue: number) {
-  d({ type: C.SET_TOTAL_SHARE_COUNT, payload: newValue });
+export function dismissSummary() {
+  d({ type: C.SET_ENCRYPTED_DATA, payload: null });
 }
 
-export function setThresholdShareCount(newValue: number) {
-  d({ type: C.SET_THRESHOLD_SHARE_COUNT, payload: newValue });
+export function setEncryptedData(newValue: string) {
+  d({ type: C.SET_ENCRYPTED_DATA, payload: newValue });
 }
 
-export function setSecretText(newValue: string) {
-  d({ type: C.SET_SECRET_TEXT, payload: newValue });
-}
-
-export function setSecretFormat(newValue: string) {
-  d({ type: C.SET_SECRET_FORMAT, payload: newValue });
-}
-
-export function setMode(newValue: string) {
-  d({ type: C.SET_MODE, payload: newValue });
-}
-
-export function setConstantShareSize(newValue: boolean) {
-  d({ type: C.SET_CONSTANT_SHARE_SIZE, payload: newValue });
-}
-
-export function setSecretIsFile(newValue: boolean) {
-  d({ type: C.SET_SECRET_IS_FILE, payload: newValue });
-}
-
-export function secretFileUploadDone(secretValue: string) {
-  d({ type: C.ON_SECRET_UPLOAD_DONE, payload: secretValue });
+export function reset() {
+  d({ type: C.RESET });
 }

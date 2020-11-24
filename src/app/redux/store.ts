@@ -2,28 +2,26 @@ import { createStore } from 'redux';
 import reducer from './reducer';
 import * as C from './constants';
 
+export interface ShareMetadata {
+    version: number,
+    secret_format: string,
+    threshold: number,
+    constant_share_size: boolean,
+    hex_length: number,
+}
+
 export interface ReduxState {
-    screen: string,
-    mode: string,
-    secret_file: string | null, // only used if secret_is_file === true
-    secret_text: string, // only used if secret_is_file === false
-    secret_is_file: boolean,
-    secret_format: string, // only used if secret_is_file === false
-    total_share_count: number,
-    threshold_share_count: number,
-    constant_size_shares: boolean,
+    metadata: ShareMetadata | null,
+    shares: string[],
+    encrypted_data: string | null,
+    summary_shown: boolean,
 }
 
 export const FALLBACK_STATE: ReduxState = {
-    screen: C.SCREEN_MODE,
-    mode: C.MODE_EASIEST,
-    secret_file: null,
-    secret_text: "",
-    secret_is_file: false,
-    secret_format: C.SECRET_TYPE_RAW,
-    total_share_count: 5,
-    threshold_share_count: 3,
-    constant_size_shares: false,
+    metadata: null,
+    shares: [],
+    encrypted_data: null,
+    summary_shown: false,
 }
 
 let devTools = undefined;

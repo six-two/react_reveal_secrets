@@ -1,6 +1,6 @@
 import React from 'react';
 import '../css/app.scss';
-import ScreenManager from './screens/ScreenManager';
+import ModeScreen from './ModeScreen';
 
 /*
 TODOS
@@ -18,7 +18,7 @@ NICE TO HAVES
 function App() {
   return (
     <div className="app">
-      <ScreenManager />
+      <ModeScreen />
     </div>
   );
 }
