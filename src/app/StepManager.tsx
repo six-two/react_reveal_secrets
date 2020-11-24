@@ -1,12 +1,10 @@
 import React from "react";
 import { connect } from 'react-redux';
 import { ReduxState, ShareMetadata } from './redux/store';
-import * as C from './redux/constants';
 import ShareInputField from './ShareInputField';
 
 
-
-const ModeScreen = (props: Props) => {
+const StepManager = (props: Props) => {
     if (!props.metadata) {
         // Input first share
         return <div>
@@ -48,5 +46,5 @@ const mapStateToProps = (state: ReduxState, ownProps: any) => {
     };
 };
 
-const ReduxComponent = connect(mapStateToProps)(ModeScreen);
+const ReduxComponent = connect(mapStateToProps)(StepManager);
 export default ReduxComponent;

@@ -1,6 +1,6 @@
 import { createStore } from 'redux';
 import reducer from './reducer';
-import * as C from './constants';
+
 
 export interface ShareMetadata {
     version: number,
