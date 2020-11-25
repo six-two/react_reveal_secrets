@@ -4,8 +4,6 @@ import sjcl from 'sjcl';
 import { ReduxState, ShareMetadata } from './redux/store';
 import * as C from './redux/constants';
 import * as Codec from './CodecConverter';
-import ShareInputField from './ShareInputField';
-import EncryptedDataInput from './EncryptedDataInput';
 
 const secrets = (window as any).secrets;
 
@@ -32,12 +30,18 @@ const ShowSecret = (props: Props) => {
     const defaultFormat = props.metadata?.secret_format || C.SECRET_TYPE_RAW;
     const [secretHex, setSecretHex] = useState("");
     const [format, setFormat] = useState(defaultFormat);
-    const a = useEffect(
+
+    useEffect(
         () => {
             const hex = secrets.combine(props.shares);
             setSecretHex(hex);
         }, [props.shares]
     );
+
+    if (!secretHex) {
+        return null;
+    }
+
     try {
         if (!props.metadata) {
             throw new Error("Metadata not set");
@@ -101,4 +105,13 @@ const mapStateToProps = (state: ReduxState, ownProps: any) => {
 };
 
 const ReduxComponent = connect(mapStateToProps)(ShowSecret);
-export default ReduxComponent;
+
+const RealShowSecret = () => {
+    return <div>
+        <h1>Secret</h1>
+
+        <ReduxComponent />
+    </div>
+}
+
+export default RealShowSecret;

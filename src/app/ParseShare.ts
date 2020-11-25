@@ -120,6 +120,9 @@ export const parseEncryptedData = (fullBase64: string): string => {
     if (version === 0) {
         const hex = verifyAndRemoveCrc16(fullHex);
         const [_header, sjclData] = splitString(hex, 2);
+        if (_header !== "00") {
+            console.warn(`Ignoring flags in header. Expected value 00, but got ${_header}`);
+        }
         return sjclData;
     } else {
         throw new Error(`Unsupported version: ${version}. Please check for updates to this application.`);
