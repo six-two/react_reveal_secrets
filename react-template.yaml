@@ -1,7 +1,10 @@
 title: Split secret
-description: A simple way to split a secret into parts, to make it easier to keep.
+description: Reveal a secret that was split into shares using the companion website.
 menu:
+  - title: Split secret
+    url: "https://split.secrets.six-two.dev"
   - title: Source code
     url: "https://github.com/six-two/react_secrets"
   - title: My other projects
     url: "https://projects.six-two.dev/"
+customHtmlHead: '<script src="secrets.min.js" type="text/javascript"></script>'

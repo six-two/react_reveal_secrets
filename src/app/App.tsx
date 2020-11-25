@@ -4,12 +4,9 @@ import StepManager from './StepManager';
 
 /*
 TODOS
-- add info how it works and how/why to use it
-- make it look ok
+- add share length sanity check
 
 IDEAS
-- have different input methods (text field / area, file)
-- have different share output formats (files, zip, text (base64, hex))
 
 NICE TO HAVES
 - make it working on mobile (status: iOS fails, missing button for decrypt)

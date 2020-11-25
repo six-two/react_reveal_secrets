@@ -20,6 +20,17 @@ That should make it easier to input a potentially long code by hand.
 Example (4 chars per block, double space after every 4 blocks):
 `abcdefghijklmnopqrstuvwxyz` => `abcd efgh ijkl mnop  qrst uvwx yz`
 
+
+## Encrypted data format
+VERSION | 2 bits | Current value: '00'. Used to keep compatibility when changing the format in the future.
+RESERVED | 6 bits | Defaults to zeros. Reserved for future use
+SJCL_ENCRYPTED | `n` bytes, with `n` being any natural number | The data encrypted by using SJCL.
+CHECKSUM | 16 bits | Calculated by turning all data before this field into a hex string, and then getting the CRC16 of that value.
+
+### Formating
+The shares will be output as a base64 string.
+
+
 ## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -26,8 +26,7 @@ function wrapped_reducer(state: ReduxState, action: Actions.Action): ReduxState 
         case C.SET_ENCRYPTED_DATA:
             return {
                 ...state,
-                encrypted_data: action.payload as string | null,
-                summary_shown: true,
+                encrypted_data: action.payload as string,
             };
         case C.RESET:
             return {

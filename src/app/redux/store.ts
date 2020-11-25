@@ -14,14 +14,12 @@ export interface ReduxState {
     metadata: ShareMetadata | null,
     shares: string[],
     encrypted_data: string | null,
-    summary_shown: boolean,
 }
 
 export const FALLBACK_STATE: ReduxState = {
     metadata: null,
     shares: [],
     encrypted_data: null,
-    summary_shown: false,
 }
 
 let devTools = undefined;

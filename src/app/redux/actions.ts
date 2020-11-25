@@ -17,10 +17,6 @@ export function addShare(share: Share) {
   d({ type: C.ADD_SHARE, payload: share });
 }
 
-export function dismissSummary() {
-  d({ type: C.SET_ENCRYPTED_DATA, payload: null });
-}
-
 export function setEncryptedData(newValue: string) {
   d({ type: C.SET_ENCRYPTED_DATA, payload: newValue });
 }

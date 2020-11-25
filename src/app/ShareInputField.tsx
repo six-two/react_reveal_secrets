@@ -5,6 +5,7 @@ import { ReduxState, ShareMetadata } from './redux/store';
 import { addShare } from './redux/actions';
 import { parseShare } from './ParseShare';
 import { unblockify } from './Formatter';
+import CustomTextArea from './CustomTextArea';
 
 
 const secrets = (window as any).secrets;
@@ -17,9 +18,9 @@ const INITIAL_STATE: State = {
 const ShareInputField = (props: Props) => {
     const [state, setState] = useState(INITIAL_STATE);
 
-    const onChange = (event: any) => setState({
+    const setText = (text: string) => setState({
         ...state,
-        text: event.target.value
+        text,
     });
 
     let promptText;
@@ -41,45 +42,40 @@ const ShareInputField = (props: Props) => {
         }
     }
 
-    const submitOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            event.stopPropagation();
-
-            try {
-                // The next line will raise an error, if the input is not a valid share
-                const shareResult = parseShare(unblockify(state.text));
-                if (shareResult.errorMessage) {
-                    setState({
-                        ...state,
-                        error: shareResult.errorMessage,
-                    });
-                } else if (shareResult.success) {
-                    const share = shareResult.success;
-                    if (props.shares.includes(share.secretJsShare)) {
-                        setState({
-                            text: '',
-                            error: 'This share has already been entered. Please try another one',
-                        });
-                    } else if (props.metadata && !_.isEqual(props.metadata, share.metadata)) {
-                        setState({
-                            text: '',
-                            error: 'Metadata do not match. This probably means, that the shares do not belong to the same secret. Please enter a different share',
-                        });
-                    } else {
-                        setState(INITIAL_STATE);
-                        addShare(share);
-                    }
-                }
-            } catch (error) {
-                console.error('Error while processing share', error);
+    const submit = () => {
+        try {
+            // The next line will raise an error, if the input is not a valid share
+            const shareResult = parseShare(unblockify(state.text));
+            if (shareResult.errorMessage) {
                 setState({
                     ...state,
-                    error: 'The text you entered is not a valid share.\nThis probably means you made a typo or the share is incomplete.',
+                    error: shareResult.errorMessage,
                 });
+            } else if (shareResult.success) {
+                const share = shareResult.success;
+                if (props.shares.includes(share.secretJsShare)) {
+                    setState({
+                        text: '',
+                        error: 'This share has already been entered. Please try another one',
+                    });
+                } else if (props.metadata && !_.isEqual(props.metadata, share.metadata)) {
+                    setState({
+                        text: '',
+                        error: 'Metadata do not match. This probably means, that the shares do not belong to the same secret. Please enter a different share',
+                    });
+                } else {
+                    setState(INITIAL_STATE);
+                    addShare(share);
+                }
             }
+        } catch (error) {
+            console.error('Error while processing share', error);
+            setState({
+                ...state,
+                error: 'The text you entered is not a valid share.\nThis probably means you made a typo or the share is incomplete.',
+            });
         }
-    }
+    };
 
     return (
         <div>
@@ -89,11 +85,12 @@ const ShareInputField = (props: Props) => {
                     {state.error}
                 </div>
             }
-            <input
-                type="text"
-                value={state.text}
-                onChange={onChange}
-                onKeyUp={submitOnEnter} />
+            <CustomTextArea
+                placeholder="Enter your share here"
+                text={state.text}
+                setText={setText}
+                onSubmit={submit} />
+
         </div>
     );
 }

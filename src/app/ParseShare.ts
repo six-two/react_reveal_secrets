@@ -1,6 +1,8 @@
 import { crc16 } from 'js-crc';
 import { ShareMetadata } from './redux/store';
 import * as C from './redux/constants';
+import * as Codec from './CodecConverter';
+
 
 export interface Share {
     metadata: ShareMetadata,
@@ -11,6 +13,8 @@ export interface ShareResult {
     errorMessage?: string,
     success?: Share,
 }
+
+// const secrets = (window as any).secrets;
 
 const FORMAT_MAP = new Map<string, string>();
 FORMAT_MAP.set('00', C.SECRET_TYPE_RAW);
@@ -70,12 +74,6 @@ const bitsToNumber = (bits: string): number => {
 
 export const parseShare = (fullHex: string): ShareResult => {
     try {
-        extractBitsFromHex('01', 0, 2);
-        extractBitsFromHex('80', 0, 2);
-        extractBitsFromHex('a5', 0, 4);
-        extractBitsFromHex('a5', 2, 4);
-        extractBitsFromHex('a5', 4, 4);
-        extractBitsFromHex('a5', 4, 2);
         const version = bitsToNumber(extractBitsFromHex(fullHex, 0, 2));
         if (version === 0) {
             const HEADER_LENGTH = 4;
@@ -114,7 +112,22 @@ export const parseShare = (fullHex: string): ShareResult => {
     }
 }
 
-const verifyAndRemoveCrc16 = (hex: string): string => {
+export const parseEncryptedData = (fullBase64: string): string => {
+    // base64 -> hex
+    const fullHex = Codec.asciiToHex(Codec.base64ToAscii(fullBase64));
+    // get version
+    const version = bitsToNumber(extractBitsFromHex(fullHex, 0, 2));
+    if (version === 0) {
+        const hex = verifyAndRemoveCrc16(fullHex);
+        const [_header, sjclData] = splitString(hex, 1);
+        return sjclData;
+    } else {
+        throw new Error(`Unsupported version: ${version}. Please check for updates to this application.`);
+    }
+
+}
+
+export const verifyAndRemoveCrc16 = (hex: string): string => {
     const CRC_LENGTH = 4; // 4 * hexChar = 16 bits
     const [data, crc] = splitString(hex, hex.length - CRC_LENGTH);
     if (crc16(data) === crc) {

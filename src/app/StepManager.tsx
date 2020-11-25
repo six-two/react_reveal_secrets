@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from 'react-redux';
 import { ReduxState, ShareMetadata } from './redux/store';
 import ShareInputField from './ShareInputField';
+import EncryptedDataInput from './EncryptedDataInput';
 
 
 const StepManager = (props: Props) => {
@@ -11,10 +12,10 @@ const StepManager = (props: Props) => {
             <h1>Input the first share</h1>
             <ShareInputField />
         </div>
-    } else if (!props.summary_shown) {
+    } else if (props.metadata.constant_share_size && props.still_needs_encrypted_data) {
         // show the summary (and if required input encrypted data)
         return <div>
-            <h1>What you will need</h1>
+            <EncryptedDataInput />
         </div>
     } else if (props.metadata.threshold < props.shares.length) {
         // Input the rmaining shares
@@ -34,7 +35,7 @@ const StepManager = (props: Props) => {
 interface Props {
     shares: string[],
     metadata: ShareMetadata | null,
-    summary_shown: boolean,
+    still_needs_encrypted_data: boolean
 }
 
 const mapStateToProps = (state: ReduxState, ownProps: any) => {
@@ -42,7 +43,7 @@ const mapStateToProps = (state: ReduxState, ownProps: any) => {
         ...ownProps,
         shares: state.shares,
         metadata: state.metadata,
-        summary_shown: state.summary_shown,
+        still_needs_encrypted_data: !state.encrypted_data,
     };
 };
 
