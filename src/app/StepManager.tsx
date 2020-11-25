@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { ReduxState, ShareMetadata } from './redux/store';
 import ShareInputField from './ShareInputField';
 import EncryptedDataInput from './EncryptedDataInput';
+import ShowSecret from './ShowSecret';
 
+const secrets = (window as any).secrets;
 
 const StepManager = (props: Props) => {
     if (!props.metadata) {
@@ -17,17 +19,14 @@ const StepManager = (props: Props) => {
         return <div>
             <EncryptedDataInput />
         </div>
-    } else if (props.metadata.threshold < props.shares.length) {
+    } else if (props.shares.length < props.metadata.threshold) {
         // Input the rmaining shares
         return <div>
             <h1>Input the next share</h1>
             <ShareInputField />
         </div>
     } else {
-        return <div>
-            <h1>The secret is ...</h1>
-        </div>
-        // Show the decrypted secret
+        return <ShowSecret />
     }
 }
 

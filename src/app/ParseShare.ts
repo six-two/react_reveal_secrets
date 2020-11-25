@@ -119,7 +119,7 @@ export const parseEncryptedData = (fullBase64: string): string => {
     const version = bitsToNumber(extractBitsFromHex(fullHex, 0, 2));
     if (version === 0) {
         const hex = verifyAndRemoveCrc16(fullHex);
-        const [_header, sjclData] = splitString(hex, 1);
+        const [_header, sjclData] = splitString(hex, 2);
         return sjclData;
     } else {
         throw new Error(`Unsupported version: ${version}. Please check for updates to this application.`);
