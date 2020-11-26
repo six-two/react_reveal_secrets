@@ -119,11 +119,11 @@ export const parseEncryptedData = (fullBase64: string): string => {
     const version = bitsToNumber(extractBitsFromHex(fullHex, 0, 2));
     if (version === 0) {
         const hex = verifyAndRemoveCrc16(fullHex);
-        const [_header, sjclData] = splitString(hex, 2);
-        if (_header !== "00") {
-            console.warn(`Ignoring flags in header. Expected value 00, but got ${_header}`);
+        const [_headerHex, sjclDataHex] = splitString(hex, 2);
+        if (_headerHex !== "00") {
+            console.warn(`Ignoring flags in header. Expected value 00, but got ${_headerHex}`);
         }
-        return sjclData;
+        return Codec.hexToAscii(sjclDataHex);
     } else {
         throw new Error(`Unsupported version: ${version}. Please check for updates to this application.`);
     }

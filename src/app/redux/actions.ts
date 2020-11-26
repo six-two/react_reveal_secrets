@@ -21,6 +21,10 @@ export function setEncryptedData(newValue: string) {
   d({ type: C.SET_ENCRYPTED_DATA, payload: newValue });
 }
 
+export function setSecretFormat(newValue: string) {
+  d({ type: C.SET_SECRET_FORMAT, payload: newValue });
+}
+
 export function reset() {
   d({ type: C.RESET });
 }

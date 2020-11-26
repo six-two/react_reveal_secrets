@@ -1,37 +1,28 @@
 import React from "react";
 import { saveAs } from 'file-saver';
-import { connect } from 'react-redux';
-import { ReduxState } from './redux/store';
 
 
 const DownloadAsTextFileButton = (props: Props) => {
     const onClick = (e: any) => {
+        const fileName = props.fileName || "data.txt";
         const blob = new Blob(
-            [props.secret],
+            [props.content],
             { type: "text/plain;charset=utf-8" }
         );
-        saveAs(blob, "split-secret.txt");
+        saveAs(blob, fileName);
     };
     return <button
         className="button txt-dl"
         onClick={onClick}>
-        {"Download as text file"}
+        {props.label ? props.label : "Save text as file"}
     </button>
 }
 
-
-
 interface Props {
-    secret: string,
+    label?: string,
+    fileName?: string,
+    content: string,
 }
 
-const mapStateToProps = (state: ReduxState, ownProps: any) => {
-    return {
-        ...ownProps,
-        state: state,
-    };
-};
-
-const ReduxComponent = connect(mapStateToProps)(DownloadAsTextFileButton);
-export default ReduxComponent;
+export default DownloadAsTextFileButton;
 

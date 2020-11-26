@@ -10,16 +10,25 @@ export interface ShareMetadata {
     hex_length: number,
 }
 
+export interface SecretState {
+    raw: string,
+    format: string,
+    formatted: string,
+    error: string | null,
+}
+
 export interface ReduxState {
     metadata: ShareMetadata | null,
     shares: string[],
     encrypted_data: string | null,
+    secret: SecretState | null,
 }
 
 export const FALLBACK_STATE: ReduxState = {
     metadata: null,
     shares: [],
     encrypted_data: null,
+    secret: null,
 }
 
 let devTools = undefined;

@@ -15,6 +15,7 @@
     "@types/react-numeric-input": "^2.2.3",
     "@types/react-redux": "^7.1.11",
     "@types/sjcl": "^1.0.29",
+    "copy-to-clipboard": "^3.3.1",
     "file-saver": "^2.0.5",
     "js-crc": "^0.2.0",
     "lodash": "^4.17.20",
