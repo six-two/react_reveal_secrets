@@ -77,7 +77,14 @@ export const parseShare = (fullHex: string): ShareResult => {
         const version = bitsToNumber(extractBitsFromHex(fullHex, 0, 2));
         if (version === 0) {
             const HEADER_LENGTH = 4;
-            const tmp = verifyAndRemoveCrc16(fullHex);
+            let tmp;
+            try {
+                tmp = verifyAndRemoveCrc16(fullHex);
+            } catch {
+                return {
+                    errorMessage: `Integrity check failed: Please make sure that you have entered the whole share, and that it contains no typos. If that does not work, try using a different share.`,
+                };
+            }
             const [headerHex, secretJsHex] = splitString(tmp, HEADER_LENGTH);
             const formatBits = extractBitsFromHex(headerHex, 2, 2);
             const secret_format = FORMAT_MAP.get(formatBits);

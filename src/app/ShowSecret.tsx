@@ -20,17 +20,19 @@ const ShowSecret = (props: Props) => {
 
     // TODO add output format selection
     const secret = props.secret.formatted;
-    return <div>
-        <h2>Default format</h2>
+    return <div className="show-secret">
+        <h2>Format: TODO</h2>
         <textarea
             disabled
             value={secret}
             cols={10} />
-        <CopyButton
-            content={secret} />
-        <DownloadButton
-            content={secret}
-            fileName="decoded-secret.txt" />
+        <div className="buttons">
+            <CopyButton
+                content={secret} />
+            <DownloadButton
+                content={secret}
+                fileName="decoded-secret.txt" />
+        </div>
     </div>
 }
 
@@ -49,7 +51,7 @@ const ReduxComponent = connect(mapStateToProps)(ShowSecret);
 
 const RealShowSecret = () => {
     return <div>
-        <h1>Secret</h1>
+        <h1>Here is your secret</h1>
 
         <ReduxComponent />
     </div>

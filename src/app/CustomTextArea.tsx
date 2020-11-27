@@ -27,7 +27,6 @@ const CustomTextArea = (props: Props) => {
             onChange={onChange}
         />
         <button
-            className="button"
             onClick={onButtonClick}>
             {"Next"}
         </button>

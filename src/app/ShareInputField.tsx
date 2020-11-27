@@ -15,86 +15,81 @@ const INITIAL_STATE: State = {
     error: null,
 };
 
-const ShareInputField = (props: Props) => {
+const ShareInputPage = (props: Props) => {
     const [state, setState] = useState(INITIAL_STATE);
 
     const setText = (text: string) => setState({
         ...state,
         text,
     });
+    const onSubmit = () => submit(props, state, setState);
 
-    let promptText;
+
+    let title, placeholder = "Please enter a share of the secret here and then press the 'Next' button (or press enter)";;
     if (props.threshold === null) {
-        promptText = 'Please enter the first share of the secret';
+        title = "Enter the first share";
     } else {
         const remainingCount = props.threshold - props.shares.length;
-        if (remainingCount === 0) {
-            const secretHex = secrets.combine(props.shares);
-            const secret = secrets.hex2str(secretHex);
-
-            return <div>
-                Your secret is "{secret}"
-            </div>
-        } else if (remainingCount === 1) {
-            promptText = 'One more share is required. Please enter it now';
+        if (remainingCount === 1) {
+            title = "You are almost done"
+            placeholder = "Just one more share is required. Come on, you can do it!";
         } else {
-            promptText = `${remainingCount} more shares are required. Please enter the next one`;
+            title = `${remainingCount} more shares required`;
         }
     }
 
-    const submit = () => {
-        try {
-            // The next line will raise an error, if the input is not a valid share
-            const shareResult = parseShare(unblockify(state.text));
-            if (shareResult.errorMessage) {
-                setState({
-                    ...state,
-                    error: shareResult.errorMessage,
-                });
-            } else if (shareResult.success) {
-                const share = shareResult.success;
-                if (props.shares.includes(share.secretJsShare)) {
-                    setState({
-                        text: '',
-                        error: 'This share has already been entered. Please try another one',
-                    });
-                } else if (props.metadata && !_.isEqual(props.metadata, share.metadata)) {
-                    setState({
-                        text: '',
-                        error: 'Metadata do not match. This probably means, that the shares do not belong to the same secret. Please enter a different share',
-                    });
-                } else {
-                    setState(INITIAL_STATE);
-                    addShare(share);
-                }
-            }
-        } catch (error) {
-            console.error('Error while processing share', error);
-            setState({
-                ...state,
-                error: 'The text you entered is not a valid share.\nThis probably means you made a typo or the share is incomplete.',
-            });
-        }
-    };
-
     return (
         <div>
-            <div>{promptText}</div>
+            <h1>{title}</h1>
             {state.error &&
                 <div className="err-msg">
                     {state.error}
                 </div>
             }
             <CustomTextArea
-                placeholder="Enter your share here"
+                placeholder={placeholder}
                 text={state.text}
                 setText={setText}
-                onSubmit={submit} />
+                onSubmit={onSubmit} />
 
         </div>
     );
 }
 
+const submit = (props: Props, state: State, setState: any) => {
+    try {
+        // The next line will raise an error, if the input is not a valid share
+        const shareResult = parseShare(unblockify(state.text));
+        if (shareResult.errorMessage) {
+            setState({
+                ...state,
+                error: shareResult.errorMessage,
+            });
+        } else if (shareResult.success) {
+            const share = shareResult.success;
+            if (props.shares.includes(share.secretJsShare)) {
+                setState({
+                    text: '',
+                    error: 'This share has already been entered. Please try another one',
+                });
+            } else if (props.metadata && !_.isEqual(props.metadata, share.metadata)) {
+                setState({
+                    text: '',
+                    error: 'Metadata do not match. This probably means, that the shares do not belong to the same secret. Please enter a different share',
+                });
+            } else {
+                setState(INITIAL_STATE);
+                addShare(share);
+            }
+        }
+    } catch (error) {
+        console.error('Error while processing share', error);
+        setState({
+            ...state,
+            error: 'The text you entered is not a valid share.\nThis probably means you made a typo or the share is incomplete.',
+        });
+    }
+};
 
 interface Props {
     threshold: number | null,
@@ -117,5 +112,5 @@ const mapStateToProps = (state: ReduxState, ownProps: any) => {
     };
 };
 
-const ReduxComponent = connect(mapStateToProps)(ShareInputField);
+const ReduxComponent = connect(mapStateToProps)(ShareInputPage);
 export default ReduxComponent;
