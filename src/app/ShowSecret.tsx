@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { ReduxState, SecretState } from './redux/store';
 import CopyButton from './CopyTextButton';
 import DownloadButton from './DownloadAsTextFile';
+import SecretFormatChooser from './SecretFormatChooser';
 
 
 const ShowSecret = (props: Props) => {
@@ -21,7 +22,7 @@ const ShowSecret = (props: Props) => {
     // TODO add output format selection
     const secret = props.secret.formatted;
     return <div className="show-secret">
-        <h2>Format: TODO</h2>
+        <SecretFormatChooser />
         <textarea
             disabled
             value={secret}

@@ -14,7 +14,12 @@ export default function reducer(state: ReduxState | undefined, action: Actions.A
         state = FALLBACK_STATE;
     }
 
-    return wrapped_reducer(state, action);
+    try {
+        return wrapped_reducer(state, action);
+    } catch (e) {
+        console.error("Error in reducer:", e);
+        return state;
+    }
 }
 
 function wrapped_reducer(state: ReduxState, action: Actions.Action): ReduxState {
@@ -40,6 +45,35 @@ function wrapped_reducer(state: ReduxState, action: Actions.Action): ReduxState 
                 ...state,
                 encrypted_data: action.payload as string,
             };
+        case C.SET_SECRET_FORMAT: {
+            if (state.secret) {
+                const format = action.payload as string;
+                let formatted = state.secret.formatted;
+                let error = state.secret.error;
+                if (state.secret.raw) {
+                    try {
+                        formatted = rawToFormat(state.secret.raw, format);
+                        error = null;
+                    } catch (e) {
+                        console.error(`Error during reducer for ${action.type}`, e);
+                        formatted = "An error occured";
+                        error = "Could not convert the secret to the target format";
+                    }
+                }
+                return {
+                    ...state,
+                    secret: {
+                        ...state.secret,
+                        format,
+                        formatted,
+                        error,
+                    }
+                }
+            } else {
+                console.error(`Action ${action.type} was fired, before the secret state was set`);
+                return state;
+            }
+        }
         case C.RESET:
             return {
                 ...FALLBACK_STATE,
@@ -118,7 +152,7 @@ const rawToFormat = (raw: string, format: string): string => {
                 return secrets.str2hex(raw);
             }
         case C.SECRET_TYPE_BASE64:
-            return btoa(format);
+            return btoa(raw);
         default:
             throw new Error(`Unknown format: "${format}"`);
     }

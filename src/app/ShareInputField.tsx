@@ -8,8 +8,6 @@ import { unblockify } from './Formatter';
 import CustomTextArea from './CustomTextArea';
 
 
-const secrets = (window as any).secrets;
-
 const INITIAL_STATE: State = {
     text: '',
     error: null,
