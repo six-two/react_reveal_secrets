@@ -1,4 +1,15 @@
 
+export const assertHex = (hex: string): string => {
+    hex = hex.toString();
+    // This method makes sure, that a string is really an valid hex string
+    if (hex.match(/^([0-9A-Fa-f]{2})*$/)) {
+        return hex;
+    } else {
+        const reason = (hex.length % 2 === 1) ? "Length is not even" : "Contains invalid characters";
+        throw new Error(`Assertion failed: Not a hex string: "${hex}". Reason: ${reason}`);
+    }
+}
+
 export const byteToHex = (byte: number): string => {
     if (byte < 0 || byte > 255) {
         throw new Error(`Number is out of byte range: ${byte}`);
@@ -7,10 +18,11 @@ export const byteToHex = (byte: number): string => {
     while (hexString.length < 2) {
         hexString = '0' + hexString;
     }
-    return hexString;
+    return assertHex(hexString);
 }
 
 export const hexToByte = (hex: string): number => {
+    assertHex(hex);
     if (!hex.match(/^[0-9A-Fa-f]{2}$/)) {
         throw new Error(`Expected a hex string of length 2, but got "${hex}"`);
     }
@@ -22,12 +34,7 @@ export const hexToByte = (hex: string): number => {
 }
 
 export const hexToAscii = (hex: string): string => {
-    if (hex.length % 2 !== 0) {
-        throw new Error("hex2ascii needs an hex string with an even length");
-    }
-    if (!hex.match(/^[0-9A-Fa-f]+$/)) {
-        throw new Error(`Invalid characters in hex string: "${hex}"`);
-    }
+    assertHex(hex);
     const values = [];
     for (let i = 0; i < hex.length; i += 2) {
         const hexByte = hex.substr(i, 2);
@@ -44,7 +51,7 @@ export const asciiToHex = (ascii: string): string => {
         const hex = byteToHex(value);
         hexList.push(hex);
     }
-    return hexList.join("");
+    return assertHex(hexList.join(""));
 }
 
 export const base64ToAscii = (base64: string): string => {
@@ -54,3 +61,16 @@ export const base64ToAscii = (base64: string): string => {
 export const asciiToBase64 = (ascii: string): string => {
     return btoa(ascii);
 }
+
+const secrets = (window as any).secrets;
+
+export const hexToUnicode = (hex: string): string => {
+    assertHex(hex);
+    return secrets.hex2str(hex);
+}
+
+export const unicodeToHex = (unicode: string): string => {
+    const hex = secrets.str2hex(unicode);
+    return assertHex(hex);
+}
+

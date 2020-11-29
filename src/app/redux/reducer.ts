@@ -110,13 +110,17 @@ const decryptSecretReducer = (state: ReduxState): ReduxState => {
             secretRaw = sjcl.decrypt(secretHex, state.encrypted_data);
         } else {
             // use the secret itself
-            secretRaw = secrets.hex2str(secretHex);
+            if (state.metadata.secret_format === C.SECRET_TYPE_UNICODE) {
+                secretRaw = Codec.hexToUnicode(secretHex);
+            } else {
+                secretRaw = Codec.hexToAscii(secretHex);
+            }
         }
 
         secret = {
             ...secret,
             raw: secretRaw,
-            format: state.metadata.secret_format,
+            format: mapMetadataFormatToDisplayFormat(state.metadata.secret_format),
         };
 
         return {
@@ -139,6 +143,16 @@ const decryptSecretReducer = (state: ReduxState): ReduxState => {
     }
 }
 
+const mapMetadataFormatToDisplayFormat = (metadataFormat: string) => {
+    switch (metadataFormat) {
+        case C.SECRET_TYPE_UNICODE:
+        case C.SECRET_TYPE_ASCII:
+            return C.SECRET_TYPE_RAW;
+        default:
+            return metadataFormat;
+    }
+}
+
 const rawToFormat = (raw: string, format: string): string => {
     switch (format) {
         case C.SECRET_TYPE_RAW:
@@ -149,10 +163,20 @@ const rawToFormat = (raw: string, format: string): string => {
                 return Codec.asciiToHex(raw);
             } catch {
                 // fall back to unicode to hex
-                return secrets.str2hex(raw);
+                return Codec.unicodeToHex(raw);
             }
         case C.SECRET_TYPE_BASE64:
-            return btoa(raw);
+            try {
+                // first try to use acsii to hex, since the output is only half as long
+                return Codec.asciiToBase64(raw);
+            } catch {
+                // first split the unicode multi byte characters into single bytes
+                const unicodeHex = Codec.unicodeToHex(raw);
+                // INTENTIONAL MISMATCH
+                const rawAsValidAsciiBytes = Codec.hexToAscii(unicodeHex);
+                // now we try it again
+                return Codec.asciiToBase64(rawAsValidAsciiBytes);
+            }
         default:
             throw new Error(`Unknown format: "${format}"`);
     }

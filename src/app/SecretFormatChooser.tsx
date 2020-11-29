@@ -40,9 +40,20 @@ interface Props {
 }
 
 const mapStateToProps = (state: ReduxState, ownProps: any) => {
+    // Map ascii and unicode both to the raw representation
+    let secretFormat;
+    if (state.secret) {
+        if (state.secret.format === C.SECRET_TYPE_ASCII || state.secret.format === C.SECRET_TYPE_UNICODE) {
+            secretFormat = C.SECRET_TYPE_RAW;
+        } else {
+            secretFormat = state.secret.format;
+        }
+    } else {
+        secretFormat = "ERROR: no secret state"
+    }
     return {
         ...ownProps,
-        secretFormat: state.secret ? state.secret.format : "ERROR: no secret state",
+        secretFormat,
     };
 };
 

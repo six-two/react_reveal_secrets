@@ -1,5 +1,7 @@
 export const DEBUG = false;
 
+export const SECRET_TYPE_ASCII = "SECRET_TYPE_ASCII";
+export const SECRET_TYPE_UNICODE = "SECRET_TYPE_UNICODE";
 export const SECRET_TYPE_RAW = "SECRET_TYPE_RAW";
 export const SECRET_TYPE_HEX = "SECRET_TYPE_HEX";
 export const SECRET_TYPE_BASE64 = "SECRET_TYPE_BASE64";

@@ -13,27 +13,31 @@ const ShowSecret = (props: Props) => {
         </div>
     }
 
+    let secretDom;
     if (props.secret.error) {
-        return <div className="err-msg">
+        secretDom = <div className="err-msg">
             {props.secret.error}
         </div>
+    } else {
+        const secret = props.secret.formatted;
+        secretDom = <>
+            <textarea
+                disabled
+                value={secret}
+                cols={10} />
+            <div className="buttons">
+                <CopyButton
+                    content={secret} />
+                <DownloadButton
+                    content={secret}
+                    fileName="decoded-secret.txt" />
+            </div>
+        </>
     }
 
-    // TODO add output format selection
-    const secret = props.secret.formatted;
     return <div className="show-secret">
         <SecretFormatChooser />
-        <textarea
-            disabled
-            value={secret}
-            cols={10} />
-        <div className="buttons">
-            <CopyButton
-                content={secret} />
-            <DownloadButton
-                content={secret}
-                fileName="decoded-secret.txt" />
-        </div>
+        {secretDom}
     </div>
 }
 

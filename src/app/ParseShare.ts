@@ -17,9 +17,10 @@ export interface ShareResult {
 // const secrets = (window as any).secrets;
 
 const FORMAT_MAP = new Map<string, string>();
-FORMAT_MAP.set('00', C.SECRET_TYPE_RAW);
+FORMAT_MAP.set('00', C.SECRET_TYPE_UNICODE);
 FORMAT_MAP.set('01', C.SECRET_TYPE_HEX);
 FORMAT_MAP.set('10', C.SECRET_TYPE_BASE64);
+FORMAT_MAP.set('11', C.SECRET_TYPE_ASCII);
 
 const splitString = (text: string, firstPartLength: number): [string, string] => {
     const part1 = text.substr(0, firstPartLength);
