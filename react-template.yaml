@@ -10,8 +10,6 @@ menu:
   - title: My other projects
     url: "https://projects.six-two.dev"
     id: page-nav-projects
-customHtmlHead: '<script src="secrets.min.js" type="text/javascript"></script>'
+customHtmlHead: '<script src="%PUBLIC_URL%/secrets.min.js" type="text/javascript"></script>'
 pre_build:
-  - template-tools/i18n/i18n.py <PROJECT>
-post_build:
-  - template-tools/minify.py
+  - template-tools/defaults.py <PROJECT>
